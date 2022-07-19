@@ -2,6 +2,34 @@
 
 1. Узнайте о [sparse](https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B7%D1%80%D0%B5%D0%B6%D1%91%D0%BD%D0%BD%D1%8B%D0%B9_%D1%84%D0%B0%D0%B9%D0%BB) (разряженных) файлах.
 
+Ответ: 
+Нет, не могут, потому что фактически это 1 и тот же объект на диске. При изменении прав или владельца у хардлинка, он меняется и на целевом объекте.
+
+Смена владельца:
+avdeevan@bhdevops:~/mtp$ ls -l
+total 0
+-rw-r--r-- 2 root root 0 июл 19 15:37 hardlinkfile
+-rw-r--r-- 2 root root 0 июл 19 15:37 testfile
+avdeevan@bhdevops:~/mtp$ sudo chown avdeevan testfile
+avdeevan@bhdevops:~/mtp$ ls -l
+total 0
+-rw-r--r-- 2 avdeevan root 0 июл 19 15:37 hardlinkfile
+-rw-r--r-- 2 avdeevan root 0 июл 19 15:37 testfile
+avdeevan@bhdevops:~/mtp$
+
+Смена атрибутов прав:
+avdeevan@bhdevops:~/mtp$ ls -l
+total 0
+-rw-r--r-- 2 avdeevan root 0 июл 19 15:37 hardlinkfile
+-rw-r--r-- 2 avdeevan root 0 июл 19 15:37 testfile
+avdeevan@bhdevops:~/mtp$ chmod -r testfile
+avdeevan@bhdevops:~/mtp$ ls -l
+total 0
+--w------- 2 avdeevan root 0 июл 19 15:37 hardlinkfile
+--w------- 2 avdeevan root 0 июл 19 15:37 testfile
+avdeevan@bhdevops:~/mtp$
+
+
 1. Могут ли файлы, являющиеся жесткой ссылкой на один объект, иметь разные права доступа и владельца? Почему?
 
 1. Сделайте `vagrant destroy` на имеющийся инстанс Ubuntu. Замените содержимое Vagrantfile следующим:
