@@ -60,11 +60,11 @@ avdeevan@bhdevops:~$
             print(prepare_result)
             break
 
-	```
+```
 	
-	## Ваш скрипт:
+## Ваш скрипт:
 
-```python
+```py
 #!/usr/bin/env python3
 
 import os
