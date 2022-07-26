@@ -18,7 +18,7 @@
 ```py
 TypeError: unsupported operand type(s) for +: 'int' and 'str'
 ```
-	* Чтобы получить для переменной значение 12, требуется привести переменную a к типу str, соответственно, c=str(a)+b
+Чтобы получить для переменной **c** значение 12, требуется привести переменную **a** к типу str, соответственно, c=str(a)+b
 ```bash
 avdeevan@bhdevops:~$ cat 2.py
 #!/usr/bin/env python3
