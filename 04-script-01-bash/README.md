@@ -105,7 +105,7 @@ do
        nc -z -w 1 $x 80
        if    (($?==1)) ;then
         echo "$(date "+%d-%m-%Y %H:%M:%S") Service is down! Script is down!" >> error.log && exit
-        else echo "$(date "+%d-%m-%Y %H:%M:%S") Serive is working!" >> log.log
+        else echo "$(date "+%d-%m-%Y %H:%M:%S") Service is working!" >> log.log
        fi
        i=$(($i+1))
       done
@@ -129,7 +129,7 @@ while  ((4 == 4))
     nc -z -w 1 $x 80
        if    (($?==1)) ;then
         echo "$(date "+%d-%m-%Y %H:%M:%S") Service tcp/80 on host $x is down! Script is down!" >> error.log && exit
-        else echo "$(date "+%d-%m-%Y %H:%M:%S") Serive tcp/80 on host $x is up!" >> log.log
+        else echo "$(date "+%d-%m-%Y %H:%M:%S") Service tcp/80 on host $x is up!" >> log.log
        fi
    done
        i=$(($i+1))
