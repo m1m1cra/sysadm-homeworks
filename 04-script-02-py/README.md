@@ -87,5 +87,81 @@ avdeevan@bhdevops:~$
 ```
 3. Доработать скрипт выше так, чтобы он мог проверять не только локальный репозиторий в текущей директории, а также умел воспринимать путь к репозиторию, который мы передаём как входной параметр. Мы точно знаем, что начальство коварное и будет проверять работу этого скрипта в директориях, которые не являются локальными репозиториями.
 
+## Ваш скрипт:
+
+```py
+
+#!/usr/bin/env python3
+import os
+import sys
+
+def checkgitdir(dir):
+    for i in  os.listdir(dir):
+     if '.git' == i:
+      return 1
+
+if len(sys.argv) < 2 :
+  print('Script running whithout arguments! Will be used local directory!')
+  if checkgitdir(os.getcwd()) == 1:
+    bash_command = ["git status"]
+    result_os = os.popen(' && '.join(bash_command)).read()
+    is_change = False
+    for result in result_os.split('\n'):
+      if result.find('modified') != -1:
+         prepare_result = result.replace('\tmodified:   ', '')
+         print(os.getcwd() +'/'+prepare_result)
+  else:
+   print('It\'s not git repositary directory, please re-run script with argument:  path git-dir,example:  ./2py /my/git/dir  or run FROM git dir. Exit')
+   sys.exit()
+elif len(sys.argv) == 2:
+ if os.path.isdir(sys.argv[1]):
+  if checkgitdir(sys.argv[1]) == 1:
+    bash_command = ["cd "+sys.argv[1], "git status"]
+    result_os = os.popen(' && '.join(bash_command)).read()
+    is_change = False
+    for result in result_os.split('\n'):
+      if result.find('modified') != -1:
+         prepare_result = result.replace('\tmodified:   ', '')
+         print(os.getcwd() +'/'+prepare_result)
+  else:
+   print('It\'s not git repositary directory, please re-run script with valid argument:  path git-dir,example:  ./2py /my/git/dir  or run FROM git dir. Exit')
+ else:
+  print ('Directory: '+sys.argv[1]+' not found. Please re-run script with corrent arguments')
+
+```
+
+## Вывод скрипта при запуске при тестировании:
+Из git-репозитория:
+
+```python
+
+avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py
+Script running whithout arguments! Will be used local directory!
+/home/avdeevan/netology/sysadm-homeworks/04-script-02-py/README.md
+/home/avdeevan/netology/sysadm-homeworks/README.md
+avdeevan@bhdevops:~/netology/sysadm-homeworks$
+
+```
+
+Тестирование кода. Добавил комменты для демонстрации логики работы в строках выполнения скрипта!
+
+```python
+
+avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py /dev/   #указана существующая директория, не являющаяся git-репом
+It's not git repositary directory, please re-run script with valid argument:  path git-dir,example:  ./2py /my/git/dir  or run FROM git dir. Exit
+avdeevan@bhdevops:~/netology/sysadm-homeworks$
+avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py /de     #указан невалидный каталог
+Directory: /de not found. Please re-run script with corrent arguments
+avdeevan@bhdevops:~/netology/sysadm-homeworks$
+avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py ~/netology/sysadm-homeworks/    #целевой git-реп, в котором были изменения!
+/home/avdeevan/netology/sysadm-homeworks/04-script-02-py/README.md
+/home/avdeevan/netology/sysadm-homeworks/README.md
+avdeevan@bhdevops:~/netology/sysadm-homeworks$
+avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py ~/sysadm-homeworks/    #также валидный git-реп, в котором НЕТ изменений.
+avdeevan@bhdevops:~/netology/sysadm-homeworks$
+avdeevan@bhdevops:~/netology/sysadm-homeworks$
+
+
+```
 4. Наша команда разрабатывает несколько веб-сервисов, доступных по http. Мы точно знаем, что на их стенде нет никакой балансировки, кластеризации, за DNS прячется конкретный IP сервера, где установлен сервис. Проблема в том, что отдел, занимающийся нашей инфраструктурой очень часто меняет нам сервера, поэтому IP меняются примерно раз в неделю, при этом сервисы сохраняют за собой DNS имена. Это бы совсем никого не беспокоило, если бы несколько раз сервера не уезжали в такой сегмент сети нашей компании, который недоступен для разработчиков. Мы хотим написать скрипт, который опрашивает веб-сервисы, получает их IP, выводит информацию в стандартный вывод в виде: <URL сервиса> - <его IP>. Также, должна быть реализована возможность проверки текущего IP сервиса c его IP из предыдущей проверки. Если проверка будет провалена - оповестить об этом в стандартный вывод сообщением: [ERROR] <URL сервиса> IP mismatch: <старый IP> <Новый IP>. Будем считать, что наша разработка реализовала сервисы: drive.google.com, mail.google.com, google.com.
 
