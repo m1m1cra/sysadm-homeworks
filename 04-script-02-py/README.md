@@ -131,22 +131,14 @@ elif len(sys.argv) == 2:
 ```
 
 ## Вывод скрипта при запуске при тестировании:
-Из git-репозитория:
 
 ```python
 
-avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py
+avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py               #запуск из каталога репа, в котором были изменения
 Script running whithout arguments! Will be used local directory!
 /home/avdeevan/netology/sysadm-homeworks/04-script-02-py/README.md
 /home/avdeevan/netology/sysadm-homeworks/README.md
 avdeevan@bhdevops:~/netology/sysadm-homeworks$
-
-```
-
-Тестирование кода. Добавил комменты для демонстрации логики работы в строках выполнения скрипта!
-
-```python
-
 avdeevan@bhdevops:~/netology/sysadm-homeworks$ ./2.py /dev/   #указана существующая директория, не являющаяся git-репом
 It's not git repositary directory, please re-run script with valid argument:  path git-dir,example:  ./2py /my/git/dir  or run FROM git dir. Exit
 avdeevan@bhdevops:~/netology/sysadm-homeworks$
