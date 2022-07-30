@@ -160,23 +160,39 @@ avdeevan@bhdevops:~/netology/sysadm-homeworks$
 ## Ваш скрипт:
 
 ```py
-
 #!/usr/bin/env python3
 import socket
+import json
+import os
 
 # load site's list from file and generate dictionary of checks
 check_dict = {}
-with open('testing_hosts') as file:
-    arr_site = [row.strip() for row in file]
-    for site in arr_site:
-     host = socket.gethostbyname(site)
-     check_dict.update({site:host})
+hosts_file = 'hosts'
+log_file = 'log.json'
+
+
+if os.path.isfile(log_file):
+ log = open(log_file, "r")
+ check_dict = json.load(log)
+else:
+ with open(hosts_file) as file:
+  arr_site = [row.strip() for row in file]
+  for site in arr_site:
+   host = socket.gethostbyname(site)
+   check_dict.update({site:host})
 
 for site,host in check_dict.items():
  if socket.gethostbyname(site) == host:
   print(site + ' - ' + host)
  else:
+  host = socket.gethostbyname(site)
   print('[ERROR] site IP mismatch: '+ host +' ' + socket.gethostbyname(site))
+
+log = open(log_file, "w")
+json.dump(check_dict,log)
+log.close()
+
+
 
 ```
 
@@ -195,6 +211,6 @@ drive.google.com - 173.194.221.194
 [ERROR] site IP mismatch: 64.233.165.17 64.233.165.19
 [ERROR] site IP mismatch: 142.251.1.101 142.251.1.102
 
-
-
 ```
+
+
