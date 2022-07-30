@@ -126,7 +126,7 @@ elif len(sys.argv) == 2:
   else:
    print('It\'s not git repositary directory, please re-run script with valid argument:  path git-dir,example:  ./2py /my/git/dir  or run FROM git dir. Exit')
  else:
-  print ('Directory: '+sys.argv[1]+' not found. Please re-run script with corrent arguments')
+  print ('Directory: '+sys.argv[1] '+ not found. Please re-run script with corrent arguments')
 
 ```
 
