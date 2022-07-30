@@ -157,3 +157,44 @@ avdeevan@bhdevops:~/netology/sysadm-homeworks$
 ```
 4. Наша команда разрабатывает несколько веб-сервисов, доступных по http. Мы точно знаем, что на их стенде нет никакой балансировки, кластеризации, за DNS прячется конкретный IP сервера, где установлен сервис. Проблема в том, что отдел, занимающийся нашей инфраструктурой очень часто меняет нам сервера, поэтому IP меняются примерно раз в неделю, при этом сервисы сохраняют за собой DNS имена. Это бы совсем никого не беспокоило, если бы несколько раз сервера не уезжали в такой сегмент сети нашей компании, который недоступен для разработчиков. Мы хотим написать скрипт, который опрашивает веб-сервисы, получает их IP, выводит информацию в стандартный вывод в виде: <URL сервиса> - <его IP>. Также, должна быть реализована возможность проверки текущего IP сервиса c его IP из предыдущей проверки. Если проверка будет провалена - оповестить об этом в стандартный вывод сообщением: [ERROR] <URL сервиса> IP mismatch: <старый IP> <Новый IP>. Будем считать, что наша разработка реализовала сервисы: drive.google.com, mail.google.com, google.com.
 
+## Ваш скрипт:
+
+```py
+
+#!/usr/bin/env python3
+import socket
+
+# load site's list from file and generate dictionary of checks
+check_dict = {}
+with open('testing_hosts') as file:
+    arr_site = [row.strip() for row in file]
+    for site in arr_site:
+     host = socket.gethostbyname(site)
+     check_dict.update({site:host})
+
+for site,host in check_dict.items():
+ if socket.gethostbyname(site) == host:
+  print(site + ' - ' + host)
+ else:
+  print('[ERROR] site IP mismatch: '+ host +' ' + socket.gethostbyname(site))
+
+```
+
+## Вывод скрипта при запуске при тестировании:
+
+```python
+
+root@bhdevops:/home/avdeevan# ./5.py
+drive.google.com - 173.194.221.194
+mail.google.com - 64.233.165.19
+google.com - 142.251.1.101
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan# ./5.py
+drive.google.com - 173.194.221.194
+[ERROR] site IP mismatch: 64.233.165.17 64.233.165.19
+[ERROR] site IP mismatch: 142.251.1.101 142.251.1.102
+
+
+
+```
