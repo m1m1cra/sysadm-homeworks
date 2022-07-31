@@ -160,16 +160,18 @@ avdeevan@bhdevops:~/netology/sysadm-homeworks$
 ## Ваш скрипт:
 
 ```py
+
+  GNU nano 6.2                                                                                                                                                 5.py
 #!/usr/bin/env python3
 import socket
 import json
 import os
 
-# load site's list from file and generate dictionary of checks
 check_dict = {}
 hosts_file = 'hosts'
 log_file = 'log.json'
 
+#loading list of checked hosts from file ./hosts and load last check from file ./log.json to check_dict
 
 if os.path.isfile(log_file):
  log = open(log_file, "r")
@@ -181,35 +183,65 @@ else:
    host = socket.gethostbyname(site)
    check_dict.update({site:host})
 
-for site,host in check_dict.items():
- if socket.gethostbyname(site) == host:
-  print(site + ' - ' + host)
+#run check and compare with last check
+
+for url,ip in check_dict.items():
+ new_ip = socket.gethostbyname(url)
+ if new_ip == ip:
+  print(url + ' - ' + ip)
  else:
-  host = socket.gethostbyname(site)
-  print('[ERROR] site IP mismatch: '+ host +' ' + socket.gethostbyname(site))
+  check_dict[url] = new_ip
+  print('[ERROR] site IP mismatch: '+url+' '+ ip +' ' + new_ip)
 
-log = open(log_file, "w")
-json.dump(check_dict,log)
-log.close()
-
-
+ log = open(log_file, "w")
+ json.dump(check_dict,log)
+ log.close()
 
 ```
 
 ## Вывод скрипта при запуске при тестировании:
 
 ```python
+root@bhdevops:/home/avdeevan# cat log.json #вывожу значения прошлой проверки
+{"drive.google.com": "64.233.161.194", "mail.google.com": "173.194.222.17", "google.com": "64.233.165.100"}root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan# ./5.py        #выполняю новую проверку
+[ERROR] site IP mismatch: drive.google.com 64.233.161.194 173.194.222.194
+[ERROR] site IP mismatch: mail.google.com 173.194.222.17 173.194.222.83
+[ERROR] site IP mismatch: google.com 64.233.165.100 64.233.164.139
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan# cat log.json   #демонстрация измененного файла после запуска скрипта
+{"drive.google.com": "173.194.222.194", "mail.google.com": "173.194.222.83", "google.com": "64.233.164.139"}root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan# ./5.py
+drive.google.com - 173.194.222.194
+mail.google.com - 173.194.222.83
+[ERROR] site IP mismatch: google.com 64.233.164.139 64.233.164.102
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan# cat log.json
+{"drive.google.com": "173.194.222.194", "mail.google.com": "173.194.222.83", "google.com": "64.233.164.102"}root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan#
+root@bhdevops:/home/avdeevan# cat hosts      #вывод тестируемых хостов с целью удобстава добавления без правки кода
+drive.google.com
+mail.google.com
+google.com
+root@bhdevops:/home/avdeevan#
 
-root@bhdevops:/home/avdeevan# ./5.py
-drive.google.com - 173.194.221.194
-mail.google.com - 64.233.165.19
-google.com - 142.251.1.101
-root@bhdevops:/home/avdeevan#
-root@bhdevops:/home/avdeevan#
-root@bhdevops:/home/avdeevan# ./5.py
-drive.google.com - 173.194.221.194
-[ERROR] site IP mismatch: 64.233.165.17 64.233.165.19
-[ERROR] site IP mismatch: 142.251.1.101 142.251.1.102
+
 
 ```
 
