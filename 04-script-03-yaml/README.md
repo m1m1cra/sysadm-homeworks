@@ -90,7 +90,7 @@ for i in range(len(check_dict)):
   check_dict[i]['ip'] = new_ip
  
  log = open(data_file, "w")
- json.dump(check_dict,log)
+ json.dump(check_dict,log, indent=4)
  log.close()
 
 with open(yaml_file, 'w') as file:
