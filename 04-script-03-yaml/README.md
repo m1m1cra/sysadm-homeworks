@@ -63,7 +63,7 @@ hosts_file = 'hosts'
 data_file = 'data.json'
 yaml_file = 'data.yaml'
 
-#loading list of checked hosts from file ./hosts and load last check from file ./log.json to check_dict
+#loading list of checked hosts from file ./hosts and load last check from file ./data.json to check_dict
 
 
 if os.path.isfile(data_file):
