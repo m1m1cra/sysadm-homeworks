@@ -50,38 +50,85 @@
 
 ### Ваш скрипт:
 ```python
-???
+#!/usr/bin/env python3
+import socket
+import json
+import os
+import yaml
+
+
+
+check_dict =[]
+hosts_file = 'hosts'
+data_file = 'data.json'
+yaml_file = 'data.yaml'
+
+#loading list of checked hosts from file ./hosts and load last check from file ./log.json to check_dict
+
+
+if os.path.isfile(data_file):
+ with open(data_file, "r") as read_file:
+    check_dict = json.load(read_file)
+else:
+ with open(hosts_file) as file:
+  arr_site = [row.strip() for row in file]
+  for site in arr_site:
+   host = socket.gethostbyname(site)
+   check_dict.append({'site': site, 'ip': host})
+
+
+
+
+#run check and compare with last check
+
+for i in range(len(check_dict)):
+ new_ip = socket.gethostbyname(check_dict[i]['site'])
+ if new_ip == check_dict[i]['ip']:
+    print(check_dict[i]['site'] + ' - ' + check_dict[i]['ip'])
+ else:
+  print('[ERROR] site IP mismatch: '+check_dict[i]['site']+' '+ check_dict[i]['ip'] +' ' + new_ip)
+  check_dict[i]['ip'] = new_ip
+ 
+ log = open(data_file, "w")
+ json.dump(check_dict,log)
+ log.close()
+
+with open(yaml_file, 'w') as file:
+  data = yaml.dump(check_dict, file, sort_keys=False, default_flow_style=False)
+
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+[ERROR] site IP mismatch: drive.google.com 74.125.131.194 142.251.1.194
+[ERROR] site IP mismatch: mail.google.com 142.251.1.18 142.251.1.19
+[ERROR] site IP mismatch: google.com 142.250.150.101 142.251.1.113
 ```
 
 ### json-файл(ы), который(е) записал ваш скрипт:
 ```json
-???
+[
+    {
+        "site": "drive.google.com",
+        "ip": "142.251.1.194"
+    },
+    {
+        "site": "mail.google.com",
+        "ip": "142.251.1.18"
+    },
+    {
+        "site": "google.com",
+        "ip": "142.251.1.113"
+    }
+]
 ```
 
 ### yml-файл(ы), который(е) записал ваш скрипт:
 ```yaml
-???
+- site: drive.google.com
+  ip: 142.251.1.194
+- site: mail.google.com
+  ip: 142.251.1.18
+- site: google.com
+  ip: 142.251.1.113
 ```
-
-## Дополнительное задание (со звездочкой*) - необязательно к выполнению
-
-Так как команды в нашей компании никак не могут прийти к единому мнению о том, какой формат разметки данных использовать: JSON или YAML, нам нужно реализовать парсер из одного формата в другой. Он должен уметь:
-   * Принимать на вход имя файла
-   * Проверять формат исходного файла. Если файл не json или yml - скрипт должен остановить свою работу
-   * Распознавать какой формат данных в файле. Считается, что файлы *.json и *.yml могут быть перепутаны
-   * Перекодировать данные из исходного формата во второй доступный (из JSON в YAML, из YAML в JSON)
-   * При обнаружении ошибки в исходном файле - указать в стандартном выводе строку с ошибкой синтаксиса и её номер
-   * Полученный файл должен иметь имя исходного файла, разница в наименовании обеспечивается разницей расширения файлов
-
-### Ваш скрипт:
-```python
-???
-```
-
-### Пример работы скрипта:
-???
